@@ -1,0 +1,44 @@
+name: Matrix Build with Artifacts - a77a20c
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: matrix-a77a20c
+        run: |
+          echo "Matrix identifier: matrix-a77a20c"
+          echo "Building on ${{ matrix.os }} (RUNNER_OS: $RUNNER_OS)"
+
+      - name: Generate build artifact
+        run: |
+          ART=build-a77a20c-${{ matrix.os }}.txt
+          echo "Build artifact for ${{ matrix.os }} (run $GITHUB_RUN_NUMBER)" > "$ART"
+          echo "GITHUB_RUN_ID=$GITHUB_RUN_ID" >> "$ART"
+          echo "JOB=${{ github.job }}" >> "$ART"
+
+      - name: Show artifact contents
+        run: |
+          ART=build-a77a20c-${{ matrix.os }}.txt
+          echo "== Artifact content ($ART) =="
+          # cat works on Linux/macOS; on Windows use type if available
+          (cat "$ART") 2>/dev/null || (type "$ART")
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-a77a20c-${{ matrix.os }}
+          path: build-a77a20c-${{ matrix.os }}.txt
