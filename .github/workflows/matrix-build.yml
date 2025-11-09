@@ -25,17 +25,15 @@ jobs:
 
       - name: Generate build artifact
         run: |
-          ART=build-a77a20c-${{ matrix.os }}.txt
-          echo "Build artifact for ${{ matrix.os }} (run $GITHUB_RUN_NUMBER)" > "$ART"
-          echo "GITHUB_RUN_ID=$GITHUB_RUN_ID" >> "$ART"
-          echo "JOB=${{ github.job }}" >> "$ART"
+          echo "Build artifact for ${{ matrix.os }} (run $GITHUB_RUN_NUMBER)" > build-a77a20c-${{ matrix.os }}.txt
+          echo "GITHUB_RUN_ID=$GITHUB_RUN_ID" >> build-a77a20c-${{ matrix.os }}.txt
+          echo "JOB=${{ github.job }}" >> build-a77a20c-${{ matrix.os }}.txt
 
       - name: Show artifact contents
         run: |
-          ART=build-a77a20c-${{ matrix.os }}.txt
-          echo "== Artifact content ($ART) =="
+          echo "== Artifact content (build-a77a20c-${{ matrix.os }}.txt) =="
           # cat works on Linux/macOS; on Windows use type if available
-          (cat "$ART") 2>/dev/null || (type "$ART")
+          (cat "build-a77a20c-${{ matrix.os }}.txt") 2>/dev/null || (type "build-a77a20c-${{ matrix.os }}.txt")
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
